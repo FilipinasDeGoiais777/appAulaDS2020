@@ -1,32 +1,39 @@
 $(document).ready(function() {
 
-    $('#table-categoria').on('click', 'button.btn-view', function(e) {
+    $('#table-cliente').on('click', 'button.btn-edit', function(e) {
         e.preventDefault()
 
         $('.modal-title').empty()
         $('.modal-body').empty()
 
-        $('.modal-title').append('Visualização de categoria')
+        $('.modal-title').append('Edição de cliente')
 
-        let idcategoria = `idcategoria=${$(this).attr('id')}`
+        let idcliente = `idcliente=${$(this).attr('id')}`
 
         $.ajax({
             type: 'POST',
             dataType: 'JSON',
             assync: true,
-            data: idcategoria,
-            url: 'src/categorias/modelo/view-categoria.php',
+            data: idcliente,
+            url: 'src/cliente/modelo/view-cliente.php',
             success: function(dado) {
                 if (dado.tipo == "success") {
-                    $('.modal-body').load('src/categorias/visao/form-categoria.html', function() {
+                    $('.modal-body').load('src/cliente/visao/form-cliente.html', function() {
                         $('#nome').val(dado.dados.nome)
-                        $('#nome').attr('readonly', 'true')
+                        $('#email').val(dado.dados.email)
+                        $('#telefone').val(dado.dados.telefone)
                         $('#dataagora').val(dado.dados.datacriacao)
-                        $('#ativo').val(dado.dados.ativo)
+
+                        if (dado.dados.ativo == "N") {
+                            $('#ativo').removeAttr('checked')
+                        }
+
+                        $('#idcliente').val(dado.dados.idcliente)
+
                     })
                     $('.btn-save').hide()
-                    $('.btn-update').hide()
-                    $('#modal-categoria').modal('show')
+                    $('.btn-update').show()
+                    $('#modal-cliente').modal('show')
                 } else {
                     Swal.fire({
                         title: 'appAulaDS',
